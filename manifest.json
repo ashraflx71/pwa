@@ -1,14 +1,15 @@
 {
   "short_name": "أشرف المطور",
   "name": "تطبيق أشرف المطور - Creative 2026",
-  "start_url": "/Pwa/",
+  "start_url": "/ppwa/index.html", 
+  "scope": "/ppwa/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#000000",
   "icons": [
     {
       "src": "icon.svg",
-      "sizes": "any",
+      "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
