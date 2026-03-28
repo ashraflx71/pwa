@@ -1,0 +1,90 @@
+/* 1. المتغيرات الأساسية - البرمجة الخضراء */
+:root {
+    --bg-dark: #000000;       /* أسود خالص لتوفير البطارية */
+    --accent-blue: #007bff;   /* أزرق ملكي للتفاعل */
+    --text-main: #ffffff;     /* أبيض ناصح للقراءة */
+    --text-dim: #b0b0b0;      /* رمادي للنصوص الثانوية */
+    --font-size-base: 20px;   /* مقاس الخط الذي تفضله */
+    --transition: 0.3s ease;
+}
+
+/* 2. إعدادات الصفحة العامة */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: var(--font-size-base);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    direction: rtl; /* لضمان دعم اللغة العربية بشكل صحيح */
+    border-top: 6px solid var(--accent-blue); /* الإطار الذي يتحكم فيه AppManager */
+}
+
+/* 3. الهيكل التنظيمي (Container) */
+.container {
+    padding: 20px;
+    max-width: 600px; /* مثالي لشاشات الموبايل */
+    margin: 0 auto;
+}
+
+/* 4. العناوين الاحترافية */
+h1, h2 {
+    color: var(--accent-blue);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* 5. البطاقات التقنية (Cards) */
+.card {
+    background: #111; /* رمادي غامق جداً لإعطاء عمق */
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* 6. الأزرار الملكية */
+.btn-royal {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn-royal:active {
+    transform: scale(0.95);
+    background-color: #0056b3;
+}
+
+/* 7. نظام التنبيهات (Toast) المعدل */
+#network-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 123, 255, 0.95); /* خلفية زرقاء شفافة */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: none;
+}
