@@ -1,47 +1,132 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><link rel="manifest" href="manifest.json">
-
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoGen PWA - أشرف</title>
+    
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="manifest.json">
+
     <style>
-        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .pwa-container { width: 90%; max-width: 400px; padding: 25px; border: 2px solid #1a73e8; border-radius: 20px; background: #050505; box-shadow: 0 10px 30px rgba(26, 115, 232, 0.3); text-align: center; }
-        h1 { color: #1a73e8; font-size: 22px; margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 15px; background: linear-gradient(45deg, #1a73e8, #0056b3); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 18px; cursor: pointer; transition: transform 0.2s; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+        .pwa-container { 
+            width: 90%; 
+            max-width: 400px; 
+            padding: 30px; 
+            border: 2px solid #1a73e8; 
+            border-radius: 25px; 
+            background: #050505; 
+            box-shadow: 0 15px 40px rgba(26, 115, 232, 0.4); 
+            text-align: center; 
+        }
+        h1 { 
+            color: #1a73e8; 
+            font-size: 24px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .subtitle { color: #888; font-size: 14px; margin-bottom: 25px; }
+        
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            background: #111; 
+            color: #fff; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            outline: none;
+            transition: border 0.3s;
+        }
+        input:focus { border-color: #1a73e8; }
+        
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(45deg, #1a73e8, #0056b3); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 18px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
         button:active { transform: scale(0.95); }
-        #log { margin-top: 20px; font-size: 14px; color: #ffd700; min-height: 40px; }
+        button:disabled { background: #444; cursor: not-allowed; }
+
+        #log { 
+            margin-top: 25px; 
+            font-size: 15px; 
+            color: #ffd700; 
+            min-height: 50px; 
+            line-height: 1.6;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #ffd700;
+            color: #000;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
     <div class="pwa-container">
-        <h1>Creative 2026 - VideoGen</h1>
-        <p style="color: #888;">أتمتة الفيديو السحابي (أشرف)</p>
+        <h1>Creative 2026</h1>
+        <div class="subtitle">منصة VideoGen لأتمتة الفيديو (أشرف)</div>
         
-        <input type="text" id="scriptText" placeholder="اكتب نص الفيديو هنا...">
+        <input type="text" id="scriptText" placeholder="اكتب عنوان الفيديو هنا...">
         
         <button id="btnRender">🚀 إنتاج الفيديو سحابياً</button>
 
-        <div id="log">جاهز للعمل..</div>
+        <div id="log">نظام التشغيل جاهز..</div>
     </div>
 
     <script>
-        // مفتاحك السحابي الذي حصلنا عليه
         const API_KEY = "tTnPCcOZUP3zI6tDjcaLs1Nx4KgWStkSBmhj3mIl";
         const API_URL = "https://api.shotstack.io/edit/v1/render";
 
-        document.getElementById('btnRender').onclick = async () => {
+        const btn = document.getElementById('btnRender');
+        const log = document.getElementById('log');
+
+        btn.onclick = async () => {
             const text = document.getElementById('scriptText').value;
-            const log = document.getElementById('log');
 
-            if(!text) { log.innerText = "❌ فضلاً اكتب نصاً أولاً"; return; }
+            if(!text) { 
+                log.innerText = "❌ فضلاً اكتب نصاً أولاً"; 
+                return; 
+            }
 
-            log.innerText = "☁️ جارٍ إرسال الأمر للسحاب...";
+            // تعطيل الزر أثناء العمل
+            btn.disabled = true;
+            log.innerText = "☁️ جاري إرسال الطلب للسحاب...";
 
             const payload = {
                 "timeline": {
@@ -64,15 +149,49 @@
                 });
 
                 const res = await response.json();
+                
                 if (response.status === 201) {
-                    log.innerHTML = `✅ تم البدء!<br>ID: ${res.response.id}<br>افحص بريدك أو حسابك الآن.`;
+                    const renderId = res.response.id;
+                    log.innerText = "⏳ تم استلام الطلب.. جاري الرندرة الآن...";
+                    checkStatus(renderId);
                 } else {
-                    log.innerText = "❌ خطأ سحابي: " + res.message;
+                    log.innerText = "❌ خطأ سحابي: " + (res.message || "فشل الطلب");
+                    btn.disabled = false;
                 }
             } catch (e) {
-                log.innerText = "❌ فشل الاتصال.. تحقق من الشبكة.";
+                log.innerText = "❌ فشل الاتصال.. تحقق من الإنترنت.";
+                btn.disabled = false;
             }
         };
+
+        async function checkStatus(id) {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_URL}/${id}`, {
+                        headers: { 'x-api-key': API_KEY }
+                    });
+                    const res = await response.json();
+                    const status = res.response.status;
+
+                    if (status === 'done') {
+                        clearInterval(interval);
+                        btn.disabled = false;
+                        log.innerHTML = `✅ اكتمل العمل بنجاح!<br>
+                        <a href="${res.response.url}" target="_blank" class="download-btn">
+                           ⬇️ تحميل الفيديو المنتج
+                        </a>`;
+                    } else if (status === 'failed') {
+                        clearInterval(interval);
+                        btn.disabled = false;
+                        log.innerText = "❌ للأسف، فشلت عملية إنتاج الفيديو.";
+                    } else {
+                        log.innerText = "⏳ جاري المعالجة السحابية... الحالة: (" + status + ")";
+                    }
+                } catch (e) {
+                    console.error("فشل في فحص الحالة، سأحاول مجدداً بعد ثوانٍ.");
+                }
+            }, 4000); // فحص كل 4 ثوانٍ لضمان استقرار الاتصال
+        }
     </script>
 </body>
 </html>
