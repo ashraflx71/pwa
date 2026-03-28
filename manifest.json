@@ -1,26 +1,15 @@
 {
-  "name": "Creative 2026 VideoGen",
-  "short_name": "VideoGen",
-  "description": "منصة أتمتة الفيديو السحابي - أشرف",
-  "start_url": "index.html",
+  "short_name": "أشرف المطور",
+  "name": "تطبيق أشرف المطور - Creative 2026",
+  "start_url": "/Pwa/",
   "display": "standalone",
+  "theme_color": "#000000",
   "background_color": "#000000",
-  "theme_color": "#1a73e8",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192x192/1a73e8/ffffff?text=VideoGen",
+      "src": "icon.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://via.placeholder.com/512x512/1a73e8/ffffff?text=VideoGen+Pro",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
-  ],
-  "categories": ["productivity", "utilities"],
-  "lang": "ar-EG"
+  ]
 }
