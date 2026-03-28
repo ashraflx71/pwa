@@ -1,6 +1,57 @@
-<link rel="manifest" href="./manifest.json">
-<link rel="stylesheet" href="./style.css">
-<meta name="theme-color" content="#000000">
-<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<div class="container">
+    <header class="card" style="text-align: center; border-bottom: 4px solid var(--accent-blue);">
+        <h1 style="margin: 0;">أشرف المطور</h1>
+        <p style="color: var(--text-dim); margin-top: 5px;">خبير SEO & UI/UX Design</p>
+    </header>
 
-<meta name="description" content="منصة أشرف المطور لخدمات الـ SEO وتصميم واجهات المستخدم UI/UX والبرمجيات الخضراء لعام 2026.">
+    <main>
+        <section class="card">
+            <h2>🚀 رؤية Creative 2026</h2>
+            <p>نقدم حلولاً برمجية متطورة تعتمد على مبدأ <strong>"Green Software"</strong> لضمان أقصى كفاءة بأقل استهلاك للطاقة.</p>
+            
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">✅ تحسين محركات البحث (SEO)</li>
+                <li style="margin-bottom: 10px;">✅ تصميم واجهات مستخدم احترافية</li>
+                <li style="margin-bottom: 10px;">✅ أتمتة المحتوى والذكاء الاصطناعي</li>
+            </ul>
+        </section>
+
+        <section id="install-section" style="display: none;">
+            <button id="btnInstall" class="btn-royal">تثبيت التطبيق على هاتفك</button>
+        </section>
+
+        <section class="card">
+            <h2>🛠️ أدواتي الذكية</h2>
+            <p>تطبيق <strong>Optimum Courier AI</strong> لتحليل المهام وتطوير الأداء الرقمي.</p>
+            <a href="#" class="btn-royal">اكتشف المزيد</a>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 20px; color: var(--text-dim); font-size: 0.9rem;">
+        <p>&copy; 2026 جميع الحقوق محفوظة لـ <strong>أشرف حسن علي</strong></p>
+    </footer>
+</div>
+
+<div id="network-toast"></div>
+
+<script src="./app.js"></script>
+<script>
+    // كود إضافي لربط زر التثبيت بـ AppManager
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-section').style.display = 'block';
+    });
+
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('install-section').style.display = 'none';
+            }
+            deferredPrompt = null;
+        }
+    });
+</script>
