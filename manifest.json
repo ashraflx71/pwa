@@ -1,9 +1,16 @@
 {
-  "name": "أشرف المطور",
-  "short_name": "أشرف",
-  "start_url": "./index.html",
+  "name": "Creative 2026 - Ashraf Developer",
+  "short_name": "VideoGen",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#050505",
   "theme_color": "#007bff",
-  "icons": [{"src": "icon.svg", "sizes": "512x512", "type": "image/svg+xml"}]
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
