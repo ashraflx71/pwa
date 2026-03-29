@@ -9,25 +9,24 @@
         body { background: var(--black-bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; border-top: 6px solid var(--blue-royal); }
         .container { max-width: 450px; margin: auto; padding-top: 30px; }
         .card { background: var(--card-bg); padding: 30px; border-radius: 25px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,123,255,0.2); }
-        h1 { color: var(--blue-royal); font-size: 28px; margin-bottom: 5px; }
-        p { color: #888; font-size: 14px; margin-bottom: 25px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; margin-bottom: 20px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--blue-royal); box-shadow: 0 0 10px rgba(0,123,255,0.5); }
-        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; font-size: 18px; width: 100%; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
-        .btn-royal:active { transform: scale(0.95); }
-        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 25px; text-align: left; height: 150px; overflow-y: auto; border: 1px solid #1a1a1a; line-height: 1.6; }
+        h1 { color: var(--blue-royal); font-size: 28px; }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; }
+        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 15px; }
+        #audioPlayer { width: 100%; margin-top: 20px; display: none; filter: invert(1); } /* شكل شيك للمشغل */
+        #log-console { background: #050505; color: #0f0; font-family: monospace; font-size: 12px; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1>Creative 2026</h1>
-            <p>مركز قيادة أشرف المطور للأتمتة والـ SEO</p>
+            <p style="color:#888;">استوديو أشرف المطور الصوتي 🎙️</p>
+            <input type="text" id="taskInput" placeholder="اكتب النص الذي تريد تحويله لصوت...">
+            <button class="btn-royal" onclick="runFactory()">إنتاج المقطع الصوتي 🏭</button>
             
-            <input type="text" id="taskInput" placeholder="أدخل مهمة الإنتاج هنا...">
-            <button class="btn-royal" onclick="runFactory()">تشغيل المصنع 🏭</button>
+            <audio id="audioPlayer" controls></audio>
             
-            <div id="log-console">> نظام أشرف جاهز لاستلام الأوامر...</div>
+            <div id="log-console">> في انتظار أوامرك يا كوماندر...</div>
         </div>
     </div>
 
@@ -35,29 +34,29 @@
         async function runFactory() {
             const task = document.getElementById('taskInput').value;
             const log = document.getElementById('log-console');
+            const player = document.getElementById('audioPlayer');
             
-            if (!task) { alert("يا كوماندر.. ادخل المهمة أولاً!"); return; }
-
-            log.innerHTML += `<br>> 🎬 جاري إرسال الطلب للمحرك التقني...`;
+            if (!task) { alert("ادخل النص أولاً!"); return; }
+            log.innerHTML += `<br>> 🎬 جاري معالجة الصوت...`;
 
             try {
-                // استخدمنا المسار النسبي لضمان التوافق مع السيرفر
                 const response = await fetch('/run-command', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ command: task })
                 });
-                
                 const result = await response.json();
                 
                 if(result.status === "ok") {
-                    log.innerHTML += `<br><span style="color: #0f0;">✅ استجابة المحرك: ${result.message}</span>`;
-                    log.innerHTML += `<br><button class="btn-royal" style="background:#28a745; margin-top:10px; font-size:14px; padding:8px;">📥 تحميل الفيديو الناتج</button>`;
+                    log.innerHTML += `<br><span style="color: #0f0;">✅ تم الإنتاج بنجاح!</span>`;
+                    // تحديث المشغل الصوتي بملف جديد (إضافة timestamp لمنع الكاش)
+                    player.src = "/production_voice.mp3?t=" + new Date().getTime();
+                    player.style.display = "block";
+                    player.play();
                 }
             } catch (e) {
-                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ اتصال: تأكد أن Pydroid يعمل!</span>`;
+                log.innerHTML += `<br><span style="color: #f00;">❌ خطأ اتصال بالسيرفر!</span>`;
             }
-            log.scrollTop = log.scrollHeight;
         }
     </script>
 </body>
