@@ -1,164 +1,118 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><link rel="canonical" href="https://ashraflx71.github.io/pwa/" />
-
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أشرف المطور | Creative 2026</title>
-    <meta name="description" content="منصة أشرف المطور لخدمات SEO و UI/UX والبرمجيات الخضراء">
-    <meta name="theme-color" content="#000000">
-
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/svg+xml" href="./icon.svg">
-
+    
     <style>
-        /* التنسيق الملكي - CSS */
         :root {
-            --bg-dark: #000000;
-            --accent-blue: #007bff;
-            --text-white: #ffffff;
-            --card-bg: #111111;
+            --black-royal: #000000;
+            --blue-royal: #007bff;
+            --text-gray: #b0b0b0;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
-            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
-            font-size: 20px; /* مقاس الخط المفضل */
+            background-color: var(--black-royal);
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            border-top: 6px solid var(--accent-blue);
+            border-top: 5px solid var(--blue-royal);
         }
 
         .container {
             width: 90%;
-            max-width: 600px;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 500px;
+            padding-top: 50px;
             text-align: center;
         }
 
-        h1 { color: var(--accent-blue); margin: 0 0 10px 0; font-size: 32px; }
-        p { color: #bbb; line-height: 1.6; }
-
-        .btn-royal {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
         }
 
-        .btn-royal:active { transform: scale(0.95); }
+        h1 { color: var(--blue-royal); font-size: 32px; margin-bottom: 10px; }
+        p { color: var(--text-gray); font-size: 18px; line-height: 1.6; }
 
-        /* نظام التنبيهات */
-        #status-toast {
-            position: fixed;
-            bottom: 20px;
-            background: rgba(0, 123, 255, 0.9);
-            padding: 10px 25px;
-            border-radius: 30px;
+        .btn-action {
+            background: var(--blue-royal);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .btn-action:active { transform: scale(0.98); }
+
+        #install-prompt {
             display: none;
-            z-index: 1000;
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px dashed var(--blue-royal);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <header class="card">
+        <div class="card">
             <h1>Creative 2026</h1>
-            <p>منصة أشرف المطور للحلول التقنية</p>
-        </header>
+            <p>منصة أشرف المطور للحلول التقنية والـ SEO</p>
+            <hr style="border: 0.5px solid #222; margin: 20px 0;">
+            <p>أهلاً بك في تطبيق الجيل القادم. تم تحسين هذا الموقع ليعمل بكفاءة الطاقة القصوى (Green Software).</p>
+            
+            <button class="btn-action">اكتشف الخدمات</button>
 
-        <main>
-            <section class="card">
-                <h2 style="color: white;">خبير SEO & UI/UX</h2>
-                <p>نصنع مستقبلاً رقمياً يعتمد على كفاءة الطاقة والبرمجة الخضراء المتطورة.</p>
-                <button id="installBtn" class="btn-royal" style="display: none;">تثبيت التطبيق الملكي</button>
-            </section>
-
-            <section class="card">
-                <h2 style="color: var(--accent-blue);">أدواتنا الذكية</h2>
-                <p>Optimum Courier AI & Content Factory</p>
-                <a href="#" class="btn-royal">اكتشف الخدمات</a>
-            </section>
-        </main>
-
-        <footer style="text-align: center; color: #555; padding-bottom: 20px;">
-            &copy; 2026 أشرف حسن علي - جميع الحقوق محفوظة
-        </footer>
+            <div id="install-prompt">
+                <p style="font-size: 14px;">ثبّت التطبيق الآن على شاشة هاتفك</p>
+                <button id="install-button" class="btn-action" style="padding: 10px; font-size: 16px;">تثبيت الآن</button>
+            </div>
+        </div>
     </div>
 
-    <div id="status-toast"></div>
-
     <script>
-        // 1. إدارة الشبكة والواجهة (AppManager)
-        const AppManager = {
-            init() {
-                this.handleNetwork();
-                this.registerSW();
-            },
-            handleNetwork() {
-                const toast = document.getElementById('status-toast');
-                const updateStatus = () => {
-                    const online = navigator.onLine;
-                    document.body.style.borderTopColor = online ? "#007bff" : "#555";
-                    toast.innerText = online ? "متصل بالشبكة ✅" : "أنت تعمل في وضع الأوفلاين ⚠️";
-                    toast.style.display = "block";
-                    setTimeout(() => toast.style.display = "none", 3000);
-                };
-                window.addEventListener('online', updateStatus);
-                window.addEventListener('offline', updateStatus);
-            },
-            registerSW() {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('./service-worker.js')
-                    .then(() => console.log("SW Registered"));
-                }
-            }
-        };
-
-        // 2. معالجة تثبيت الـ PWA
+        // كود تحويل الموقع إلى تطبيق (PWA Logic)
         let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
+        const installDiv = document.getElementById('install-prompt');
+        const installBtn = document.getElementById('install-button');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'block';
+            installDiv.style.display = 'block';
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') installBtn.style.display = 'none';
+                if (outcome === 'accepted') {
+                    installDiv.style.display = 'none';
+                }
                 deferredPrompt = null;
             }
         });
 
-        document.addEventListener('DOMContentLoaded', () => AppManager.init());
+        // تسجيل المحرك الخفي (Service Worker)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
     </script>
 </body>
 </html>
