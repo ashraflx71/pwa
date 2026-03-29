@@ -3,95 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative 2026 | VideoGen Pro</title>
+    <title>Creative 2026 | VideoGen</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #007bff; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; text-align: center; padding: 20px; }
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; max-width: 450px; margin: auto; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid var(--blue); background: #000; color: #fff; margin: 15px 0; text-align: center; }
-        .btn { background: var(--blue); color: white; border: none; padding: 15px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; }
-        #vRes { width: 100%; margin-top: 20px; border-radius: 15px; display: none; border: 2px solid var(--blue); }
-        #saveBtn { background: #28a745; display: none; margin-top: 15px; text-decoration: none; padding: 15px; border-radius: 50px; color: white; font-weight: bold; }
+        :root { --blue: #007bff; --green: #28a745; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; text-align: center; padding: 20px; margin: 0; }
+        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 25px; max-width: 450px; margin: auto; box-shadow: 0 10px 30px rgba(0,123,255,0.2); }
+        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid var(--blue); background: #000; color: #fff; margin: 15px 0; text-align: center; font-family: 'Cairo'; font-size: 16px; }
+        .btn-blue { background: var(--blue); color: white; border: none; padding: 18px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-green { background: var(--green); color: white; border: none; padding: 18px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; display: none; text-decoration: none; }
+        #videoResult { width: 100%; margin-top: 20px; border-radius: 15px; display: none; border: 2px solid var(--blue); }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1 style="color: var(--blue);">Creative 2026</h1>
-    <p style="color:#888;">مصنع أشرف للإنتاج الآلي 🏭</p>
-    <input type="text" id="tIn" placeholder="اكتب نص الفيديو الطويل هنا...">
-    <button id="go" class="btn" onclick="startGen()">🚀 إنتاج الفيديو الآن</button>
-    <div id="st" style="margin-top:10px; color: var(--blue);"></div>
-    <video id="vRes" controls playsinline></video>
-    <a id="saveBtn">📥 حفظ الفيديو في المعرض</a>
+    <h1 style="color: var(--blue); margin-bottom: 5px;">Creative 2026</h1>
+    <p style="color:#888; font-size: 14px;">مصنع أشرف المطور للإنتاج الآلي 🏭</p>
+    
+    <input type="text" id="userInput" placeholder="اكتب نص الفيديو هنا...">
+    
+    <button id="actionBtn" class="btn-blue" onclick="startVideoProduction()">🚀 إنتاج الفيديو الآن</button>
+    
+    <div id="statusLabel" style="margin-top:15px; color: var(--blue); font-size: 14px; font-weight: bold;"></div>
+    
+    <video id="videoResult" controls playsinline></video>
+    
+    <a id="downloadBtn" class="btn-green">📥 حفظ الفيديو في المعرض</a>
 </div>
 
-<canvas id="cnv" width="640" height="360"></canvas>
+<canvas id="mainCanvas" width="640" height="360"></canvas>
 
 <script>
-async function startGen() {
-    const text = document.getElementById('tIn').value;
-    const btn = document.getElementById('go');
-    const status = document.getElementById('st');
-    const video = document.getElementById('vRes');
-    const save = document.getElementById('saveBtn');
-    const canvas = document.getElementById('cnv');
+async function startVideoProduction() {
+    const text = document.getElementById('userInput').value;
+    const btn = document.getElementById('actionBtn');
+    const status = document.getElementById('statusLabel');
+    const video = document.getElementById('videoResult');
+    const dlLink = document.getElementById('downloadBtn');
+    const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
 
-    if(!text) return alert("ادخل النص يا كوماندر!");
+    if(!text) return alert("يا كوماندر.. ادخل النص أولاً!");
 
     btn.disabled = true;
-    status.innerText = "⏳ جاري تحريك النصوص سحابياً...";
+    status.innerText = "⏳ جاري الرندر السحابي...";
     video.style.display = "none";
-    save.style.display = "none";
+    dlLink.style.display = "none";
 
     const stream = canvas.captureStream(30);
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
     const chunks = [];
 
     recorder.ondataavailable = e => chunks.push(e.data);
     recorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
+        
         video.src = url;
         video.style.display = "block";
-        video.play(); // تشغيل تلقائي للتأكد
-        save.href = url;
-        save.download = `Ashraf_Creative_2026.mp4`;
-        save.style.display = "block";
+        
+        // تفعيل وإظهار زرار الحفظ
+        dlLink.href = url;
+        dlLink.download = `Ashraf_Creative_2026.mp4`;
+        dlLink.style.display = "block"; 
+        
         status.innerText = "✅ تم الإنتاج بنجاح!";
         btn.disabled = false;
     };
 
     recorder.start();
-    let f = 0;
-    function draw() {
-        ctx.fillStyle = '#050505'; ctx.fillRect(0,0,640,360);
-        ctx.strokeStyle = '#007bff'; ctx.lineWidth = 10; ctx.strokeRect(10,10,620,340);
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 30px Cairo'; ctx.textAlign = 'center';
+    let frame = 0;
+    const totalFrames = 150; 
+
+    function renderFrame() {
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // رسم النص (دعم النصوص الطويلة)
+        ctx.strokeStyle = '#007bff';
+        ctx.lineWidth = 15;
+        ctx.strokeRect(10, 10, 620, 340);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 35px Cairo';
+        ctx.textAlign = 'center';
+        
+        // تقسيم النص لأسطر
         const words = text.split(' ');
         let line = '';
-        let y = 150;
+        let y = 160;
         for(let n = 0; n < words.length; n++) {
             let testLine = line + words[n] + ' ';
-            if (ctx.measureText(testLine).width > 580 && n > 0) {
+            if (ctx.measureText(testLine).width > 550 && n > 0) {
                 ctx.fillText(line, 320, y);
                 line = words[n] + ' ';
-                y += 45;
+                y += 50;
             } else { line = testLine; }
         }
         ctx.fillText(line, 320, y);
 
-        if (f < 150) { // فيديو لمدة 5 ثواني
-            f++;
-            requestAnimationFrame(draw);
-        } else { recorder.stop(); }
+        ctx.font = '20px Cairo';
+        ctx.fillStyle = '#007bff';
+        ctx.fillText("Creative 2026 | Developed by Ashraf", 320, 320);
+
+        if (frame < totalFrames) {
+            frame++;
+            requestAnimationFrame(renderFrame);
+        } else {
+            recorder.stop();
+        }
     }
-    draw();
+    renderFrame();
 }
 </script>
 </body>
