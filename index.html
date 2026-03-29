@@ -2,81 +2,158 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative 2026 | VideoGen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Creative 2026 | VideoGen 1LE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent-blue: #007bff; --bg-dark: #050505; }
-        body { background: var(--bg-dark); color: white; font-family: 'Cairo', sans-serif; text-align: center; padding: 20px; }
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 25px; max-width: 450px; margin: auto; box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1); }
-        input { width: 85%; padding: 15px; border-radius: 12px; border: 1px solid var(--accent-blue); background: #000; color: #fff; margin: 15px 0; outline: none; text-align: center; }
-        .btn-royal { background: var(--accent-blue); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; }
-        #progress-container { width: 100%; height: 6px; background: #222; margin-top: 15px; display: none; border-radius: 5px; overflow: hidden; }
-        #progress-fill { width: 0%; height: 100%; background: var(--accent-blue); transition: 0.3s; }
-        video { width: 100%; margin-top: 20px; border-radius: 15px; display: none; border: 2px solid var(--accent-blue); }
-        canvas { display: none; }
+        :root { --accent-blue: #007bff; --success-green: #28a745; --bg-dark: #050505; --card-bg: #111; }
+        body { background: var(--bg-dark); color: white; font-family: 'Cairo', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; border-top: 5px solid var(--accent-blue); }
+        .container { width: 100%; max-width: 450px; }
+        .card { background: var(--card-bg); border: 1px solid #222; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(0, 123, 255, 0.15); }
+        
+        h1 { color: var(--accent-blue); font-size: 26px; margin: 0 0 5px 0; }
+        p.subtitle { color: #888; font-size: 14px; margin-bottom: 25px; }
+        
+        input { width: 90%; padding: 16px; border-radius: 12px; border: 1.5px solid var(--accent-blue); background: #000; color: #fff; margin-bottom: 20px; outline: none; text-align: center; font-family: 'Cairo'; font-size: 16px; transition: 0.3s; }
+        input:focus { box-shadow: 0 0 15px rgba(0, 123, 255, 0.3); }
+
+        .btn-royal { background: linear-gradient(45deg, var(--accent-blue), #0056b3); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 17px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3); }
+        .btn-royal:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn-save { background: linear-gradient(45deg, var(--success-green), #1e7e34); display: none; text-decoration: none; margin-top: 15px; display: none; justify-content: center; align-items: center; }
+
+        #status-area { margin: 20px 0; display: none; }
+        #status-text { font-size: 14px; color: var(--accent-blue); display: block; margin-bottom: 8px; }
+        .progress-bar-bg { width: 100%; height: 8px; background: #222; border-radius: 10px; overflow: hidden; }
+        .progress-bar-fill { width: 0%; height: 100%; background: var(--accent-blue); transition: 0.3s linear; }
+
+        video { width: 100%; margin-top: 25px; border-radius: 15px; display: none; border: 2.5px solid var(--accent-blue); box-shadow: 0 0 20px rgba(0, 123, 255, 0.2); }
+        canvas { display: none; } /* محرك الرندر مخفي */
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1 style="color: var(--accent-blue);">Creative 2026</h1>
-    <p style="color:#888;">أتمتة الفيديو السحابي (أشرف)</p>
-    
-    <input type="text" id="videoText" placeholder="اكتب نص الفيديو هنا...">
-    
-    <div id="status-text" style="font-size: 14px; color: #0f0; margin-bottom: 5px;">جاهز لبدء الإنتاج...</div>
-    <div id="progress-container"><div id="progress-fill"></div></div>
+<div class="container">
+    <div class="card">
+        <h1>Creative 2026</h1>
+        <p class="subtitle">أتمتة الفيديو السحابي (أشرف المطور)</p>
+        
+        <input type="text" id="videoInput" placeholder="اكتب رسالة الفيديو هنا...">
+        
+        <div id="status-area">
+            <span id="status-text">🚀 جاري الاتصال بالسحابة...</span>
+            <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill"></div></div>
+        </div>
 
-    <button id="genBtn" class="btn-royal" onclick="startRender()">🚀 إنتاج الفيديو سحابياً</button>
-    
-    <video id="videoResult" controls></video>
+        <button id="startBtn" class="btn-royal" onclick="generateAshrafVideo()">🚀 إنتاج فيديو "بجنيه"</button>
+        
+        <video id="outputVideo" controls></video>
+        <a id="downloadBtn" class="btn-royal btn-save">📥 حفظ الفيديو في المعرض</a>
+    </div>
 </div>
 
 <canvas id="renderCanvas" width="640" height="360"></canvas>
 
 <script>
-async function startRender() {
-    const text = document.getElementById('videoText').value;
+async function generateAshrafVideo() {
+    const text = document.getElementById('videoInput').value;
+    const btn = document.getElementById('startBtn');
+    const statusText = document.getElementById('status-text');
+    const progressFill = document.getElementById('progress-fill');
+    const statusArea = document.getElementById('status-area');
+    const video = document.getElementById('outputVideo');
+    const dlBtn = document.getElementById('downloadBtn');
     const canvas = document.getElementById('renderCanvas');
     const ctx = canvas.getContext('2d');
-    const video = document.getElementById('videoResult');
-    const btn = document.getElementById('genBtn');
-    const bar = document.getElementById('progress-fill');
-    const container = document.getElementById('progress-container');
-    const status = document.getElementById('status-text');
 
-    if (!text) return alert("ادخل النص يا كوماندر!");
+    if (!text) return alert("يا كوماندر أشرف.. ادخل النص أولاً!");
 
+    // 1. تهيئة الواجهة
     btn.disabled = true;
-    container.style.display = 'block';
-    status.innerText = ">> جاري الرندر السحابي...";
+    statusArea.style.display = 'block';
+    video.style.display = 'none';
+    dlBtn.style.display = 'none';
+    progressFill.style.width = '0%';
+    progressFill.style.backgroundColor = 'var(--accent-blue)';
+    statusText.innerText = "🚀 جاري تشغيل المحرك البصري...";
 
-    const stream = canvas.captureStream(30);
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-    const chunks = [];
+    try {
+        // 2. فحص دعم المتصفح لنوع الفيديو
+        const stream = canvas.captureStream(30); // 30 فريم في الثانية
+        const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        const chunks = [];
 
-    recorder.ondataavailable = e => chunks.push(e.data);
-    recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/mp4' });
-        video.src = URL.createObjectURL(blob);
-        video.style.display = "block";
-        status.innerText = "✅ تم الإنتاج بنجاح!";
-        bar.style.width = "100%";
+        recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+        
+        recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'video/mp4' });
+            const videoUrl = URL.createObjectURL(blob);
+            
+            video.src = videoUrl;
+            video.style.display = "block";
+            
+            dlBtn.href = videoUrl;
+            dlBtn.download = `Creative2026_Ashraf_${Date.now()}.mp4`;
+            dlBtn.style.display = "flex";
+            
+            progressFill.style.width = '100%';
+            progressFill.style.backgroundColor = 'var(--success-green)';
+            statusText.innerText = "✅ تم الإنتاج بنجاح (فيديو بـ 1 جنيه)!";
+            statusText.style.color = 'var(--success-green)';
+            btn.disabled = false;
+        };
+
+        // 3. بدء عملية الرندر
+        recorder.start();
+        let frame = 0;
+        const totalFrames = 150; // مدة الفيديو (5 ثواني)
+
+        function renderLoop() {
+            // الخلفية الملكية
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // إطار ليزر أزرق
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 12;
+            ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+            // النص الأساسي الخاص بالكوماندر
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 38px Cairo';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+            
+            // العلامة التجارية
+            ctx.font = '20px Cairo';
+            ctx.fillStyle = '#007bff';
+            ctx.fillText("Creative 2026 | Ashraf Production", canvas.width / 2, canvas.height / 2 + 70);
+
+            if (frame < totalFrames) {
+                frame++;
+                progressFill.style.width = (frame / totalFrames * 100) + '%';
+                if (frame == 50) statusText.innerText = "⚙️ جاري دمج الوسائط والأتمتة...";
+                if (frame == 100) statusText.innerText = "🪄 جاري وضع اللمسات الأخيرة...";
+                requestAnimationFrame(renderLoop);
+            } else {
+                recorder.stop();
+            }
+        }
+
+        renderLoop();
+
+    } catch (err) {
+        statusText.innerText = "❌ خطأ سحابي: " + (err.message || "فشل غير معروف");
+        statusText.style.color = "#ff4d4d";
         btn.disabled = false;
-    };
-
-    recorder.start();
-    let frame = 0;
-    function draw() {
-        ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "#007bff"; ctx.lineWidth = 10; ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
-        ctx.fillStyle = "#fff"; ctx.font = "bold 35px Cairo"; ctx.textAlign = "center";
-        ctx.fillText(text, canvas.width/2, canvas.height/2);
-        if (frame < 120) { frame++; bar.style.width = (frame/1.2) + "%"; requestAnimationFrame(draw); } 
-        else { recorder.stop(); }
     }
-    draw();
+}
+
+// تسجيل الـ Service Worker لضمان عمل الـ PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+    });
 }
 </script>
 </body>
