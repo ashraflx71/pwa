@@ -2,52 +2,201 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative 2026 | أشرف المطور</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أشرف المطور | Creative 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#000000">
+
     <style>
-        :root { --blue-royal: #007bff; --black-bg: #000; }
-        body { background: var(--black-bg); color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #111; padding: 30px; border-radius: 25px; border: 1px solid #222; max-width: 400px; margin: auto; box-shadow: 0 10px 40px rgba(0,123,255,0.2); }
-        h1 { color: var(--blue-royal); margin-bottom: 20px; }
-        input { width: 90%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 20px; outline: none; border: 1px solid var(--blue-royal); }
-        .btn-royal { background: var(--blue-royal); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; }
-        #status { margin-top: 20px; color: #0f0; font-family: monospace; font-size: 14px; }
-        audio { width: 100%; margin-top: 20px; filter: invert(1); display: none; }
+        :root {
+            --bg-dark: #050505;
+            --accent-blue: #007bff;
+            --text-white: #ffffff;
+            --card-bg: #111111;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            border-top: 5px solid var(--accent-blue);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 30px 10px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.05);
+            text-align: center;
+        }
+
+        h1 { color: var(--accent-blue); font-size: 28px; margin: 0; }
+        h2 { font-size: 20px; color: #fff; margin-bottom: 15px; }
+        p { color: #aaa; line-height: 1.8; font-size: 15px; }
+
+        input {
+            width: 85%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--accent-blue);
+            background: #000;
+            color: #fff;
+            margin-bottom: 20px;
+            outline: none;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-royal {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-royal:active { transform: scale(0.95); }
+
+        #videoResult {
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 15px;
+            display: none;
+            border: 2px solid var(--accent-blue);
+        }
+
+        #status-log {
+            margin-top: 15px;
+            color: #0f0;
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        canvas { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Creative 2026</h1>
-        <p style="color: #888;">مصنع أشرف الصوتي السريع 🎙️</p>
-        
-        <input type="text" id="textInput" placeholder="اكتب النص هنا...">
-        <button class="btn-royal" onclick="speakNow()">نطق النص فوراً 🔊</button>
-        
-        <div id="status">جاهز للتنفيذ..</div>
-        <audio id="audioPlayer" controls></audio>
+    <div class="container">
+        <header class="card">
+            <h1>Creative 2026</h1>
+            <p>منصة أشرف المطور للبرمجيات الخضراء والـ SEO</p>
+        </header>
+
+        <main>
+            <section class="card">
+                <h2>🎬 مصنع أول فيديو تجريبي</h2>
+                <p>اكتب نصاً ليتحول إلى فيديو فوراً</p>
+                
+                <input type="text" id="videoText" placeholder="اكتب عنوان الفيديو هنا...">
+                <button class="btn-royal" onclick="generateVideo()">🚀 رندر الفيديو الآن</button>
+                
+                <div id="status-log">> بانتظار أوامرك يا كوماندر أشرف...</div>
+                
+                <video id="videoResult" controls></video>
+                <canvas id="renderCanvas" width="640" height="360"></canvas>
+            </section>
+
+            <section class="card">
+                <h2 style="color: var(--accent-blue);">خبير SEO & UI/UX</h2>
+                <p>نصنع تجربة مستخدم فريدة متوافقة مع معايير 2026 العالمية.</p>
+                <a href="https://wa.me/201234567890" class="btn-royal" style="text-decoration: none; display: block;">تواصل مباشرة</a>
+            </section>
+        </main>
+
+        <footer style="color: #444; font-size: 12px; margin-top: 10px;">
+            &copy; 2026 أشرف حسن علي - جميع الحقوق محفوظة
+        </footer>
     </div>
 
     <script>
-        function speakNow() {
-            const text = document.getElementById('textInput').value;
-            const status = document.getElementById('status');
+        function generateVideo() {
+            const text = document.getElementById('videoText').value;
+            const log = document.getElementById('status-log');
+            const canvas = document.getElementById('renderCanvas');
+            const ctx = canvas.getContext('2d');
+            const video = document.getElementById('videoResult');
             
-            if (!text) { alert("يا كوماندر.. اكتب النص الأول!"); return; }
+            if (!text) return alert("من فضلك اكتب النص أولاً!");
 
-            status.innerText = ">> جاري النطق بصوت عالي الجودة...";
+            log.innerText = ">> جاري الرندر البصري (Creative 2026)...";
             
-            // استخدام محرك النطق الداخلي للمتصفح (خفيف جداً وبدون بايثون)
-            const speech = new SpeechSynthesisUtterance();
-            speech.text = text;
-            speech.lang = 'ar-SA'; // لغة عربية احترافية
-            speech.rate = 0.9;     // سرعة هادئة ملكية
-            
-            window.speechSynthesis.speak(speech);
-            
-            speech.onend = () => {
-                status.innerText = "✅ تمت المهمة بنجاح يا كوماندر أشرف!";
+            // بدء التسجيل من الكانفاس
+            const stream = canvas.captureStream(30);
+            const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const chunks = [];
+
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/mp4' });
+                video.src = URL.createObjectURL(blob);
+                video.style.display = "block";
+                log.innerText = "✅ تم إنتاج الفيديو بنجاح يا كوماندر!";
+                video.play();
             };
+
+            recorder.start();
+            
+            let frame = 0;
+            const maxFrames = 150; // مدة الفيديو (5 ثواني)
+
+            function draw() {
+                // خلفية سوداء ملكية
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // إطار أزرق مضيء
+                ctx.strokeStyle = '#007bff';
+                ctx.lineWidth = 8;
+                ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+                // كتابة النص الرئيسي
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 35px Cairo';
+                ctx.textAlign = 'center';
+                ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+                
+                // حقوق المطور
+                ctx.font = '20px Cairo';
+                ctx.fillStyle = '#007bff';
+                ctx.fillText("Produced by Ashraf Developer", canvas.width / 2, canvas.height / 2 + 60);
+
+                if (frame < maxFrames) {
+                    frame++;
+                    requestAnimationFrame(draw);
+                } else {
+                    recorder.stop();
+                }
+            }
+            draw();
+        }
+
+        // تسجيل عامل الخدمة لـ PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(() => console.log('SW Ready'));
+            });
         }
     </script>
 </body>
